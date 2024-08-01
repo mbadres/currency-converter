@@ -21,7 +21,10 @@
             "input": "apps/currency-converter/public"
           }
         ],
-        "styles": ["apps/currency-converter/src/styles.css"],
+        "styles": [
+          "node_modules/bulma/css/bulma.min.css",
+          "apps/currency-converter/src/styles.css"
+        ],
         "scripts": []
       },
       "configurations": {
