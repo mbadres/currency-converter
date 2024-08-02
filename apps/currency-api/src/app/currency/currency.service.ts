@@ -32,20 +32,28 @@ export class CurrencyService {
 
   async convertCurrency(from: string, to: string, amount: number): Promise<any> {
     try {
-      const params = new URLSearchParams({
-        apikey: config.freeCurrencyApiKey,
+      // Fetch latest rates with 'from' currency as base
+      const ratesData = await this.getLatestRates(from, [to]);
+      
+      if (!ratesData.data || !ratesData.data[to]) {
+        throw new Error(`Unable to get exchange rate for ${to}`);
+      }
+
+      const rate = ratesData.data[to];
+      const convertedAmount = amount * rate;
+
+      return {
         from,
         to,
-        amount: amount.toString(),
-      });
-
-      const response = await lastValueFrom(
-        this.httpService.get(`${this.apiUrl}/convert`, { params })
-      );
-
-      return response.data;
+        amount,
+        result: convertedAmount,
+        rate,
+      };
     } catch (error) {
-      throw new HttpException('Failed to convert currency', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        `Failed to convert currency: ${error.message}`, 
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
   }
 }
