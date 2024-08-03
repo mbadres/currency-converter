@@ -1,23 +1,40 @@
 <section class="hero is-primary">
 	<div class="hero-body">
-	  <div class="">
+	  <div class="columns">
+		<div class="column">
 		<div class="field has-addons">
 			<p class="control">
-			  <input class="input" type="text" placeholder="Amount of money">
+			  <input class="input" type="number" placeholder="Amount of money" [(ngModel)]="sourceAmount">
 			</p>
 			<p class="control">
 			  <span class="select">
-				<select>
-				  <option>$</option>
-				  <option>£</option>
-				  <option>€</option>
+				<select [(ngModel)]="sourceCurrency" (change)="setSourceCurrency($event)">
+						<option *ngFor="let currency of supportedCurrencies" [value]="currency">
+							{{getCurrencySymbolIfSupported(currency)}}
+						</option>
 				</select>
 			  </span>
 			</p>
 			<p class="control">
-			  <button class="button">Transfer</button>
+			  <input class="input" type="text" value="in" readonly>
 			</p>
+			<p class="control">
+			  <span class="select">
+				<select [(ngModel)]="targetCurrency" (change)="setTargetCurrency($event)">
+						<option *ngFor="let currency of supportedCurrencies" [value]="currency">
+							{{getCurrencySymbolIfSupported(currency)}}
+						</option>
+				</select>
+			  </span>
+			</p>
+			<p class="control">
+				<button class="button" (click)="calculate()">Calculate</button>
+			  </p>
 		  </div>
+		</div>
+		<div class="column">
+			<p class="title">{{this.targetAmount | number: '1.2-2'}}</p>
+		</div>
 	  </div>
 	</div>
 </section>
